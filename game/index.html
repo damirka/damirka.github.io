@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>api</title>
+  <!--[if IE]>
+		<script type="text/javascript">
+			window.location = "/ie/";
+		</script>
+	<![endif]-->
+  <script>
+    var isIE = /*@cc_on!@*/ false || !!document.documentMode;
+    if (isIE) window.location = "/ie/";
+  </script>
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <script type="text/javascript">
+    var files = [
+        // game basics
+        "console.js",
+        "base.js",
+        "game.js",
+        "class.js",
+        // libraries
+        "libraries/three.min.js",
+        // modules
+        "modules/module.js",
+        "modules/path.js",
+        "modules/coordinates.js",
+        "modules/graphics.js",
+        // actions
+        "actions/action.js",
+        "actions/move.js",
+        "actions/go.js",
+        // objects
+        "objects/object.js",
+        "objects/unit.js",
+        "test.js"
+      ],
+      i = 0,
+      loadScript = function(file) {
+        var fileref = document.createElement('script');
+        fileref.setAttribute("type", "text/javascript");
+        fileref.setAttribute("src", "js/" + file);
+        i++;
+        document.getElementsByTagName("head")[0].appendChild(fileref);
+        fileref.onload = function(e) {
+          if (i < files.length) {
+            // unnessesary debug - console.log({ "event" : e, "script" :files[i] });
+            console.log(files[i]);
+            loadScript(files[i]);
+          } else {
+            console.warn("Loaded all scripts, test enabled");
+            if (Game.init()) test.run();
+          }
+        };
+      };
+    loadScript(files[0]);
+  </script>
+</head>
+
+<body>
+  <div class="f">
+    <a href="/">damirka.github.io</a>
+  </div>
+</body>
+
+</html>

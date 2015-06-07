@@ -1,0 +1,42 @@
+@font-face {
+    font-family: Fugue;
+    src: url(fonts/fugue_mono.otf);
+}
+@font-face {
+	font-family: FugueHeader;
+	src: url(fonts/fugue_headline.otf);
+}
+body {
+	background:#fff;
+	font-family:FugueHeader;
+	font-size:14px;
+	line-height:14px;
+}
+.c {
+	width:600px;
+	margin:300px auto;
+}
+.c a {
+	display:inline-block;
+	
+	text-align:center;
+	text-decoration:none;
+	text-transform:uppercase;
+	letter-spacing:2px;
+	color:#000;
+}
+.c a:hover {
+	color:grey;
+}
+.f {
+	position:absolute;
+	bottom:10px;
+	right:10px;
+	font-size:10px;
+	padding:15px;
+	text-align:center;
+	text-decoration:none;
+	text-transform:uppercase;
+	letter-spacing:2px;
+	color:#000;
+}

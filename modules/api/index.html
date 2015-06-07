@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>api</title>
+  <!--[if IE]>
+		<script type="text/javascript">
+			window.location = "/ie/";
+		</script>
+	<![endif]-->
+  <script>
+    var isIE = /*@cc_on!@*/ false || !!document.documentMode;
+    if (isIE) window.location = "/ie/";
+  </script>
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <script src="js/EmptyMap.js"></script>
+  <script src="js/BaseFunctions.js"></script>
+  <script src="js/PathModule.js"></script>
+  <script src="js/SelectedModule.js"></script>
+  <script src="js/Class.js"></script>
+  <style>
+    .selected {
+      box-shadow: 0px 0px 2px 2px red;
+    }
+  </style>
+
+
+  <script>
+    window.onload = function() {
+    	Game.init();
+
+    	var
+				a = document.createElement("div"),
+    		o = {
+    			top: Game.Map.scale + "px",
+    			left: Game.Map.scale + "px",
+    			width: (Game.Map.scale - 1) + "px",
+    			height: (Game.Map.scale - 1) + "px",
+    			position: "absolute",
+    			background: "#00ff00"
+    		},
+    		k = {
+    			top: Game.Map.scale * 10 + "px",
+    			left: Game.Map.scale * 10 + "px",
+    			width: (Game.Map.scale * 2 - 1) + "px",
+    			height: (Game.Map.scale * 2 - 1) + "px",
+    			position: "absolute",
+    			background: "#eaf20e"
+    		};
+
+    	for (var i in o)
+    		a.style[i] = o[i];
+
+
+    	a.setAttribute("id", "adam");
+
+    	Game.Map.element.appendChild(a);
+
+    	Game.UnitContainer.push(new Game.UnitObject(a, "u1"));
+
+    	a.object = Game.UnitContainer[0];
+
+    	var b = document.createElement("div");
+
+    	for (i in k)
+    		b.style[i] = k[i];
+
+    	Game.Map.element.appendChild(b);
+
+    	Game.BaseContainer.push(new Game.GoldMine(b));
+
+    	b.object = Game.BaseContainer[0];
+
+    	var g = document.createElement("div");
+
+    	k.left = Game.Map.scale * 15 + "px";
+
+    	for (i in k)
+    		g.style[i] = k[i];
+
+    	Game.Map.element.appendChild(g);
+
+    	Game.BaseContainer.push(new Game.GoldMine(g));
+
+    	g.object = Game.BaseContainer[1];
+
+
+    	window.Adam = Game.UnitContainer[0];
+
+    	//Adam.build("u1");
+    	window.Bob = Game.UnitContainer[1];
+    };
+  </script>
+</head>
+
+<body>
+  <div class="c">
+    <div class="b-f">
+      <div class="b" onclick="Adam.build('b1')">Create Main Building</div>
+      <div class="b" onclick="Adam.build('b2')">Create Barracs</div>
+      <div class="b" onclick="Adam.build('u1')">Create Unit</div>
+      <div class="b" onclick="Adam.mine()">Mine</div>
+    </div>
+  </div>
+  <div class="r">
+    <div class="r-f">
+      <div class="b">some explanation here</div>
+    </div>
+  </div>
+  <div class="f">
+    <a href="/">damirka.github.io</a>
+  </div>
+</body>
+
+</html>

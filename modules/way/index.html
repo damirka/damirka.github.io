@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<style>
+		body {
+			padding:0;
+			margin:0;
+			
+			background:black;
+		}
+		#container {
+			width:600px;
+			height:600px;
+			
+			position:absolute;
+			top:0;
+			left:0;
+			
+			background:white;
+		}
+		#person {
+			width:10px;
+			height:10px;
+			
+			position:absolute;
+			
+			
+			border-radius:50%;
+			background:#000;
+		}
+		.block {
+			width:10px;
+			height:10px;
+			
+			position:absolute;
+			
+			background:#000;		
+		}
+		.path {
+			width:8px;
+			height:8px;
+			
+			position:absolute;
+			
+			border-style:dashed;
+			border-width:1px;
+			border-color:red;
+			
+			text-align:center;
+			line-height:10px;
+			font-size:5px;
+			font-family:Helvetica;
+		}
+	</style>
+	<div id="container"> 
+		<div id="person" style="top:180px;left:90px;"></div>
+		<div class="block" style="top:120px; left:30px; width:120px;"></div>
+		<div class="block" style="top:0px; left:60px; height:60px;"></div>
+		<div class="block" style="top:150px; left:270px; height:60px; width:60px"></div>
+		<div class="block" style="top:90px; left:240px; width:60px;"></div>
+		<div class="block" style="top:200px; left:200px; width:10px; height:200px;"></div>
+		<div class="block" style="top:390px; left:210px; width:200px;"></div>
+		<div class="block" style="top:200px; left:210px; width:60px;"></div>
+		<div class="block" style="top:210px; left:240px; width:10px; height:130px;"></div>
+		<div class="block" style="top:260px; left:260px; width:10px; height:130px;"></div>
+		<div class="block" style="top:330px; left:220px; width:20px; height:10px;"></div>
+		<div class="block" style="top:300px; left:220px; width:10px; height:30px;"></div>
+		
+	</div>
+	<script>
+		var width  = 600,
+			height = 600;
+		
+		var	elemX = 0,
+			elemY = 0,
+			scale  = 10,
+			man = document.getElementById("person"),
+			container = document.getElementById("container");
+		
+		function getElementPosition (elem) {
+			return { y : parseInt(elem.style.top || 0), x : parseInt(elem.style.left || 0) }
+		}
+		
+		function setElementPosition (x,y) {
+			man.style.top  = y + "px";
+			man.style.left = x + "px"
+		}
+		
+		function getObjectMap () {
+			var	arrMap = [];
+			
+			for(i=0;i<width/scale;i++) {
+				arrMap.push([]);
+				for(j=0;j<height/scale;j++) {
+					switch (document.elementFromPoint(i*scale+5,j*scale+5)) {
+						case man :
+							arrMap[i].push(-2);
+							break;
+						case container:
+							arrMap[i].push(-2);
+							break;
+						default  :
+							arrMap[i].push(-1);
+							break;
+					}
+				}
+			}
+			return arrMap
+		}
+		
+		// got it
+		
+		var len = 0,
+			px  = [],
+			py  = [];
+		
+		function waveEffect (sx,sy,fx,fy,map) {
+			var max,
+				stop = 0,
+				// Окрестность Мура
+				delta = [{x: 1,y: 0},
+						 {x: 0,y: 1},
+						 {x:-1,y: 0},
+						 {x: 0,y:-1},
+						 {x:+1,y:-1},
+						 {x:+1,y:+1},
+						 {x:-1,y:+1},
+						 {x:-1,y:-1}];
+				/** Окрестность Фон-Неймана
+				delta = [{x: 1,y: 0},
+						 {x: 0,y: 1},
+						 {x:-1,y: 0},
+						 {x: 0,y:-1},]
+				*/
+			if (map[sx][sy]==-2) map[sx][sy]=0; else { console.log (map[sx][sy]); return "wrong starting point"; }
+			if (map[fx][fy]==-1) return "wrong ending point";
+			for(a=0;a<map.length*10;a++) {
+				if (stop==0)
+					for(i=0;i<map.length-1;i++)
+						for(j=0;j<map[0].length-1;j++)
+							if (map[i][j]==a) {
+								// console.warn(a,i,j);
+								for(k=0;k<delta.length;k++) 
+									if (!((i+delta[k].x)>=map.length || (j+delta[k].y)>=map[0].length || (i+delta[k].x)<0 || (j+delta[k].y)<0)) {
+											if (map[i+delta[k].x][j+delta[k].y]==-2) map[i+delta[k].x][j+delta[k].y] = a+1;
+											if ((i+delta[k].x)==fx && (j+delta[k].y)==fy) stop=a+1;
+										}
+							}
+			}
+			
+			
+			console.log("stop",stop);
+			
+			/** Мы подготовили карту, обозначив на ней весь маршрут */
+			
+			var x = fx,
+				y = fy,
+				path = [{x:fx,y:fy,a:stop}],
+				stp = 0;
+			for(a=stop;a>=0;a--) {
+				stp = 0;
+				for(k=0;k<delta.length;k++)
+					if (!stp) 
+						if (!((x+delta[k].x)>=map.length || (y+delta[k].y)>=map[0].length || (x+delta[k].x)<0 || (y+delta[k].y)<0))
+							if (map[x+delta[k].x][y+delta[k].y]==a-1 && map[x+delta[k].x][y+delta[k].y]!=-1 ) {
+								x+=delta[k].x; y+=delta[k].y;
+								path.push({x:x,y:y,a:a-1});
+								stp=1;
+							}
+			}
+			
+			function traceVisualPath(x,y,text) {
+				var obj = document.createElement("div");
+				container.appendChild(obj);
+				
+				obj.setAttribute("class","path");
+				obj.innerHTML = text || "";
+				obj.style.top  = y + "px";
+				obj.style.left = x + "px";
+			}
+			
+			for(i=0;i<path.length;i++)
+				traceVisualPath(path[i].x*10,path[i].y*10,path[i].a);
+			
+			return path;
+		}
+		
+		var moving = false,
+			t = 0;
+		
+		function moveObject (obj,path) {
+			window.a = path.length-2;
+			window.moving = true;
+			window.t = window.setInterval(function(){
+				obj.style.top  = (path[a].y*10 || 0) + "px";
+				obj.style.left = (path[a].x*10 || 0) + "px";
+			 	a--;
+				if (a<0) window.clearInterval(t);
+			},10)
+		}
+		
+		container.oncontextmenu = function (e) {
+			e.preventDefault();
+			if (e.which == 3 ) {
+				var way = container.querySelectorAll(".path");
+				if (way.length>0)
+					for(i=0;i<way.length;i++)
+						way[i].parentNode.removeChild(way[i]);
+						
+				var fx,fy,sx,sy;
+					fx = Math.floor(e.x/10 || 0);
+					fy = Math.floor(e.y/10 || 0);
+					sx = parseInt(man.style.left)/10;
+					sy = parseInt(man.style.top)/10;
+					
+				
+				var path = waveEffect(sx,sy,fx,fy,getObjectMap());
+				
+				moveObject(man,path);
+			}	else console.log(e);
+		}
+		
+		container.onclick = function (e) {
+			console.log(e.which);
+			
+		}
+	</script>
+</body>
+</html>
